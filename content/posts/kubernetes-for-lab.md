@@ -171,9 +171,9 @@ sudo cp -i /etc/kubernetes/admin.conf ~/.kube/config
 sudo chown $USER:$USER ~/.kube/config
 ```
 
-> Menerapkan CNI Calico
+> Menerapkan CNI Flannel
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
 watch kubectl -n kube-system get pod -o wide
 ```
 
@@ -203,4 +203,4 @@ kubectl get svc -A -o wide
 - https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm
 - https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm
 - https://docs.docker.com/engine/install/ubuntu/
-- https://projectcalico.docs.tigera.io/archive/v3.20/getting-started/kubernetes/self-managed-onprem/onpremises
+- https://github.com/flannel-io/flannel
