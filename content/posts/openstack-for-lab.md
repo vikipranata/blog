@@ -23,7 +23,8 @@ Lalu untuk kebutuhan jaringan openstack dengan rincian sebagai berikut :
 Semua node menggunakan sistem operasi `Ubuntu 18.04 Bionic` dengan versi `OpenStack Xena`
 
 ## Rancangan Topologi
-![image](/assets/images/topologi-openstack-lab.svg)
+
+![image](/assets/images/Topologi-Openstack-Lab.png)
 
 ## Persiapan Cluster
 ### 1. Membuat dan mendistribusikan ssh public key
