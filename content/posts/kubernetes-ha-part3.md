@@ -33,7 +33,7 @@ Melanjutkan tahap sebelumnya membangun [Kubernetes Cluster High Availability](/p
 | k8s-master03 | 192.168.0.23 | 172.16.0.23 | Int & Ext Net |
 
 ## Rancangan Topologi
-![image](/assets/images/k8s_kubernetes_ha.svg)
+![image](/assets/images/k8s_kubernetes_ha.png)
 
 ## Inisialisasi cluster Kubernetes pada semua node
 ### Forwarding ipv4 dan membolehkan iptables melihat traffic bridge
