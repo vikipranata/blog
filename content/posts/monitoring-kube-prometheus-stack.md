@@ -8,13 +8,12 @@ showToc: true
 ---
 
 ## Persiapan
-
-Serta membuat namespace baru untuk monitoring dengan perintah berikut :
+Membuat namespace baru untuk monitoring dengan perintah berikut :
 ```bash
 kubectl create ns monitoring
 ```
 
-Lalu pemasangan `helm` yang bisa diterapkan pada postingan [menerapkan helm packet manager](/posts/kubernetes-getting-started/#menerapkan-helm-packet-manager) lalu menambahkan repo prometheus-comunity dengan perintah berikut :
+Lalu memasangan `helm` yang bisa diterapkan pada postingan [helm packet manager](/posts/kubernetes-getting-started/#menerapkan-helm-packet-manager). Lnalu menambahkan repo prometheus-comunity dengan perintah berikut :
 ```bash
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
@@ -23,8 +22,10 @@ helm repo update
 Membuat secret akses certificate etcd client
 > run as root user
 ```bash
+sudo su
 export KUBECONFIG=/etc/kubernetes/admin.conf
 kubectl -n monitoring create secret generic etcd-client-cert --from-file=/etc/kubernetes/pki/etcd/ca.crt --from-file=/etc/kubernetes/pki/etcd/healthcheck-client.crt --from-file=/etc/kubernetes/pki/etcd/healthcheck-client.key
+exit
 ```
 
 ### Membuat helm values kube-prometheus-stack
@@ -107,7 +108,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: monitor-grafana
+            name: monitoring-grafana
             port:
               number: 80
 ---
@@ -128,7 +129,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: monitor-kube-prometheus-st-prometheus
+            name: monitoring-kube-prometheus-prometheus
             port:
               number: 9090
 ```
@@ -143,7 +144,7 @@ Lalu lihat service den ingress kube-prometheus-stack dengan perintah
 ### Memperbaiki masalah yang terjadi
 ![image](/assets/images/kube-prometheus-stack-issue.jpg)
 
-> Update ip 127.0.0.1 ke ip 0.0.0.0.
+> Update ip `127.0.0.1` ke ip `0.0.0.0`
 ```bash
 sudo nano /etc/kubernetes/manifests/etcd.yaml
     # Ubah bagian ini
