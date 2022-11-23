@@ -7,12 +7,11 @@ tags: ["linux", "Kubernetes"]
 showToc: true
 ---
 
-# Lab Environment
+## Lab Environment
 Spesifikasi instance yang akan dibuat pada [cluster openstack](/posts/openstack-for-lab) yang telah kita bangun sebelumnya.
 Namun kita bisa menerapkan ini pada environment virtual machine, cloud, maupun baremetal dengan langsung menuju langkah [inisialisasi cluster kubernetes.](/posts/kubernetes-for-lab/#inisialisasi-cluster-kubernetes-pada-semua-node)
 
-> Software
-
+### Software
 | Software | Version | Description |
 | ---- | ---- | ---- |
 | Ubuntu | 20.04 | Operating System |
@@ -20,21 +19,22 @@ Namun kita bisa menerapkan ini pada environment virtual machine, cloud, maupun b
 | Docker | latest | Container Runtime Interface |
 | Calico | v3.20 | Container Network Interface |
 
-> Hardware
-
+### Hardware
 | Node Name | Processor | RAM | Volumes |Description |
 | ---- | ---- | ---- | ---- | ---- |
 | k8s-master-node | 2 Core | 2 GB | 15 GB | Control Plane Node |
 | k8s-worker-node01 | 2 Core | 2 GB | 15 GB | Worker Node |
 | k8s-worker-node02 | 2 Core | 2 GB | 15 GB | Worker Node |
 
-> Networking
+### Networking
+| Node Name | IP Address | Description |
+| ---- | ---- | ---- | ---- |
+| k8s-master-node | 192.168.0.101 | Int & External Network |
+| k8s-worker-node01 | 192.168.0.102 | Internal Network |
+| k8s-worker-node02 | 192.168.0.103 | Internal Network |
 
-| Node Name | IP Address | Floating IP | Description |
-| ---- | ---- | ---- | ---- | ---- |
-| k8s-master01 | 192.168.0.101 | 172.16.0.101 | Internal & External Network |
-| k8s-master01 | 192.168.0.102 | | Internal Network |
-| k8s-master02 | 192.168.0.103 | | Internal Network |
+### Topologi
+![img](/assets/images/kube-lab.png)
 
 ## Inisialisasi VM OpenStack
 ### Membuat Port
