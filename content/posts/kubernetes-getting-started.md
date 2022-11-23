@@ -140,7 +140,7 @@ kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisione
 ```
 setelah terpasang, local-path dapat digunakan dengan StorageClass bernama `local-path` yang didapat dari perintah `kubectl get storageclass`
 
-## Sumber Referensi :
+## Sumber Referensi
 - https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-linux
 - https://helm.sh/docs/intro/install
 - https://github.com/kubernetes/kube-state-metrics

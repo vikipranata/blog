@@ -236,7 +236,7 @@ Melihat kredensial username dan password pada file admin-openrc.sh
 
 Selanjutnya untuk tahap [mengoperasikan openstack via CLI](/posts/openstack-operational-cli)
 
-## Referensi
+## Sumber Referensi
 - https://docs.openstack.org/kolla-ansible/latest/
 - https://docs.openstack.org/kolla-ansible/latest/user/operating-kolla.html
 - https://docs.openstack.org/kolla-ansible/latest/reference/deployment-and-bootstrapping/bootstrap-servers.html

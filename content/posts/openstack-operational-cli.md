@@ -202,7 +202,7 @@ openstack server list | grep web-server-ubuntu01
 openstack server resize confirm web-server-ubuntu01
 ```
 
-## Referensi
+## Sumber Referensi
 - https://docs.openstack.org/python-openstackclient/latest/cli/command-objects/image-v2.html
 - https://docs.openstack.org/python-openstackclient/latest/cli/command-objects/keypair.html
 - https://docs.openstack.org/python-openstackclient/latest/cli/command-objects/flavor.html

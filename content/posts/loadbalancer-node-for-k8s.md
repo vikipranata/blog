@@ -121,7 +121,7 @@ curl https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/cert
 
 Lakukan penguijan konfigurasi dengan perintah `nginx -t` jika tidak ada pesan error bisa langsung diterapkan konfiruasi yang baru dengan perintah `sudo systemctl reload nginx`.
 
-## Sumber Referensi :
+## Sumber Referensi
 - https://geekrewind.com/generate-free-wildcard-certificates-using-lets-encrypt-certbot-on-ubuntu-18-04
 - https://ssl-config.mozilla.org/#server=nginx&version=1.17.7&config=intermediate&openssl=1.1.1k&guideline=5.6
 - https://github.com/certbot/certbot/tree/master/certbot-nginx
