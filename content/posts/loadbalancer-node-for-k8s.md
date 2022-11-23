@@ -89,15 +89,27 @@ upstream k8s-ingress-https {
 }
 
 server {
-    listen 443 ssl;
+    listen 443 ssl http2;
     proxy_pass k8s-ingress-https;
     proxy_connect_timeout 10s;
     proxy_timeout 60s;
 
-    ssl_certificate       /etc/letsencrypt/live/syslog.my.id/cert.pem;
-    ssl_certificate_key   /etc/letsencrypt/live/syslog.my.id/privkey.pem;
-    ssl_dhparam           /etc/letsencrypt/ssl-dhparams.pem;
-    include               /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_certificat      /etc/letsencrypt/live/syslog.my.id/cert.pem;
+    ssl_certificate_key /etc/letsencrypt/live/syslog.my.id/privkey.pem;
+    ssl_session_timeout 1d;
+    ssl_session_cache   shared:MozSSL:10m;
+    ssl_session_tickets off;
+
+    # intermediate configuration
+    ssl_dhparam         /etc/letsencrypt/ssl-dhparams.pem;
+    include             /etc/letsencrypt/options-ssl-nginx.conf;
+
+    # HSTS (ngx_http_headers_module is required) (63072000 seconds)
+    add_header Strict-Transport-Security "max-age=63072000" always;
+
+    # OCSP stapling
+    ssl_stapling on;
+    ssl_stapling_verify on;
 }
 EOF
 ```
