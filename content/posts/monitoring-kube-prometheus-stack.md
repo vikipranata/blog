@@ -7,15 +7,27 @@ tags: ["linux", "Kubernetes", "helm", "Prometheus"]
 showToc: true
 ---
 
-### Membuat secret akses certificate etcd client
+## Persiapan
+Membuat secret akses certificate etcd client
 > run as root user
 ```bash
 export KUBECONFIG=/etc/kubernetes/admin.conf
 kubectl -n monitoring create secret generic etcd-client-cert --from-file=/etc/kubernetes/pki/etcd/ca.crt --from-file=/etc/kubernetes/pki/etcd/healthcheck-client.crt --from-file=/etc/kubernetes/pki/etcd/healthcheck-client.key
 ```
 
+Lalu pemasangan `helm` yang bisa diterapkan pada postingan [menerapkan helm packet manager](/posts/kubernetes-getting-started/#menerapkan-helm-packet-manager) lalu menambahkan repo prometheus-comunity dengan perintah berikut :
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+```
+
+Serta membuat namespace baru untuk monitoring dengan perintah berikut :
+```bash
+kubectl create ns monitoring
+```
+
 ### Membuat helm values kube-prometheus-stack
-buat file dan isi data sebagai berikut :
+buat file dan isi data sebagai berikut :    
 `sudo nano kube-prometheus-stack-helm-values.yaml`
 ```yaml
 alertmanager:
@@ -74,6 +86,8 @@ helm install monitoring prometheus-community/kube-prometheus-stack --namespace m
 ```
 
 ### Membuat ingress kube-prometheus-stack
+Membuat ingress untuk subdomain _grafana.syslog.my.id_ dan _prometheus.syslog.my.id_ dengan manifest file berikut :    
+`nano kube-prometheus-stack-ingress.yaml`
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -117,20 +131,35 @@ spec:
             port:
               number: 9090
 ```
+Menerapkan manifest dengan perintah
+```bash
+kubectl apply -f kube-prometheus-stack-ingress.yaml
+```
+Lalu lihat service den ingress kube-prometheus-stack dengan perintah    
+`kubectl -n monitoring get svc` dan `kubectl -n monitoring get ingress`
+![image](/assets/images/k8s_service_prometheus_stack.png)
 
-### Memperbaik masalah yang terjadi
+### Memperbaiki masalah yang terjadi
 ![image](/assets/images/kube-prometheus-stack-issue.jpg)
-Update ip 127.0.0.1 ke ip 0.0.0.0.
+
+> Update ip 127.0.0.1 ke ip 0.0.0.0.
 ```bash
 sudo nano /etc/kubernetes/manifests/etcd.yaml
-    - --listen-metrics-urls=http://127.0.0.1:2381
+    # Ubah bagian ini
+    # - --listen-metrics-urls=http://127.0.0.1:2381
+```
+```bash
 sudo nano /etc/kubernetes/manifests/kube-controller-manager.yaml
-    - --bind-address=127.0.0.1
+    # Ubah bagian ini
+    # - --bind-address=127.0.0.1
+```
+```bash
 sudo nano /etc/kubernetes/manifests/kube-scheduler.yaml
-    - --bind-address=127.0.0.1
+    # Ubah bagian ini
+    # - --bind-address=127.0.0.1
 ```
 
-### Sumber Referensi
+## Sumber Referensi
 Persistent volumes issue:    
 - https://github.com/prometheus-community/helm-charts/issues/186#issuecomment-899669790
 
