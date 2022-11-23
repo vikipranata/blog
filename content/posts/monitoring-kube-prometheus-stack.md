@@ -8,11 +8,10 @@ showToc: true
 ---
 
 ## Persiapan
-Membuat secret akses certificate etcd client
-> run as root user
+
+Serta membuat namespace baru untuk monitoring dengan perintah berikut :
 ```bash
-export KUBECONFIG=/etc/kubernetes/admin.conf
-kubectl -n monitoring create secret generic etcd-client-cert --from-file=/etc/kubernetes/pki/etcd/ca.crt --from-file=/etc/kubernetes/pki/etcd/healthcheck-client.crt --from-file=/etc/kubernetes/pki/etcd/healthcheck-client.key
+kubectl create ns monitoring
 ```
 
 Lalu pemasangan `helm` yang bisa diterapkan pada postingan [menerapkan helm packet manager](/posts/kubernetes-getting-started/#menerapkan-helm-packet-manager) lalu menambahkan repo prometheus-comunity dengan perintah berikut :
@@ -21,9 +20,11 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm repo update
 ```
 
-Serta membuat namespace baru untuk monitoring dengan perintah berikut :
+Membuat secret akses certificate etcd client
+> run as root user
 ```bash
-kubectl create ns monitoring
+export KUBECONFIG=/etc/kubernetes/admin.conf
+kubectl -n monitoring create secret generic etcd-client-cert --from-file=/etc/kubernetes/pki/etcd/ca.crt --from-file=/etc/kubernetes/pki/etcd/healthcheck-client.crt --from-file=/etc/kubernetes/pki/etcd/healthcheck-client.key
 ```
 
 ### Membuat helm values kube-prometheus-stack
