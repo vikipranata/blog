@@ -30,7 +30,7 @@ exit
 
 ### Membuat helm values kube-prometheus-stack
 buat file dan isi data sebagai berikut :    
-`sudo nano kube-prometheus-stack-helm-values.yaml`
+`nano kube-prometheus-stack-helm-values.yaml`
 ```yaml
 alertmanager:
   enabled: false
