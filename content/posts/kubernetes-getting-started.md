@@ -8,14 +8,14 @@ showToc: true
 ---
 Ada beberapa hal yang dapat dilakukan setelah membangun cluster kubernetes dengan menginstall tools maupun add-ons berikut:
 
-## Menerapkan HELM Packet Manager
+### Menerapkan HELM Packet Manager
 _The package manager for Kubernetes_ membantu kita untuk memasang aplikasi lewaat paket manager cukup dengan perintah berikut :
 ```bash
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 ```
 Selanjutnya kita bisa menambahkan helm repo sesuai dengan aplikasi yang akan kita pasang.
 
-## Menerapkan bash auto-completion
+### Menerapkan bash auto-completion
 Perintah kubernetes sangat banyak dan jarang kita hafal, langkah berikut dapat membantu untuk menjalankan perintah `kubectl, kubeadm, maupun helm`
 
 ```bash
@@ -36,7 +36,7 @@ EOF
 
 Selanjutnya jangan lupa `source ~/.profile` pada terminal session kita untuk menerapkan profile environment yang baru.
 
-## Menginstall Metrics Server
+### Menginstall Metrics Server
 Metrics Server berfungsi untuk mengumpulkan resource metrics dari Kubelet dan mengexpose ke apiserver melalui Metrics API untuk digunakan oleh Horizontal Pod Autoscaler (HPA) dan Vertical Pod Autoscaler (VPA). Metrics API juga dapat digunakan dengan perintah `kubectl top node` maupun `kubectl top pod -n <namespace>` bahkan kita bisa mensortir berdasarkan `--sort-by-cpu` maupun `--sort-by-memory`.
 ```bash
 helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server
@@ -56,7 +56,7 @@ helm install metrics-server metrics-server/metrics-server -n kube-system -f metr
 ```
 Kita dapat melihat helm value apa saja yang bisa kita sesuaikan sebelum diterapkan dengan perintah `helm show values metrics-server/metrics-server` dan melihat helm value apa saja yang sudah kita terapkan dengan perintah `helm -n kube-system get values metrics-server`
 
-## Menginstall Kube State Metrics
+### Menginstall Kube State Metrics
 kube-state-metrics (KSM) adalah layanan sederhana yang mendengarkan server API Kubernetes dan menghasilkan metrik tentang status objek.
 Buat folder dan kumpulkan manifest hasil download dengan perintah berikut :
 ```bash
@@ -73,7 +73,7 @@ kubectl apply -f .
 ```
 Kita bisa melihat hasil instalasinya dengan perintah `kubectl -n kube-system get all | grep kube-state-metrics`
 
-## Membuat Ingress Controller
+### Membuat Ingress Controller
 Ingress digunakan untuk mengonfigurasi load balance HTTP untuk aplikasi (pod) yang berjalan di Kubernetes yang diperlukan untuk mengirimkan aplikasi tersebut ke klien di luar klaster Kubernetes. Kita akan menerapkan Nginx Ingress Controller menggunakan Helm Packet Manager dengan perintah berikut :
 
 Buat namespace terlebih dahulu dengan perintah `kubectl create ns ingress-controller` agar tersusun dengan baik.
@@ -95,7 +95,7 @@ helm install ingress nginx-stable/nginx-ingress --namespace ingress-controller -
 ```
 Kita dapat melihat helm value apa saja yang bisa kita sesuaikan sebelum diterapkan dengan perintah `helm show values nginx-stable/nginx-ingress` dan melihat helm value apa saja yang sudah kita terapkan dengan perintah `helm -n kube-system get values ingress`
 
-## Menerapkan Kubernetes Dashboard
+### Menerapkan Kubernetes Dashboard
 Kubernetes Dashboard sangat berguna untuk kita dalam mengelola cluster kubernetes secara GUI
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
@@ -133,7 +133,14 @@ http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kube
 
 ![img](/assets/images/kube-dashboard.jpg)
 
-## Sumber Referensi :
+### Menambahkan local-path provisioner
+Local path provisioner berfungsi untuk memanfaatkan penyimpanan lokal di setiap node dengan membuat PersistentVolumes berbasis hostPath atau local pada directory /opt/local-path-provisioner di setiap node secara otomatis. Untuk menerapkan manifest local-path dengan perintah berikut :
+```bash
+kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.23/deploy/local-path-storage.yaml
+```
+setelah terpasang, local-path dapat digunakan dengan StorageClass bernama `local-path` yang didapat dari perintah `kubectl get storageclass`
+
+### Sumber Referensi :
 - https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-linux
 - https://helm.sh/docs/intro/install
 - https://github.com/kubernetes/kube-state-metrics
@@ -145,3 +152,4 @@ http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kube
 - https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer
 - https://github.com/kubernetes/dashboard
 - https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/README.md
+- https://github.com/rancher/local-path-provisioner
