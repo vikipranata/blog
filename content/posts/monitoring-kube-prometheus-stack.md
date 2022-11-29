@@ -144,6 +144,15 @@ Lalu lihat service den ingress kube-prometheus-stack dengan perintah
 ### Memperbaiki masalah yang terjadi
 ![image](/assets/images/kube-prometheus-stack-issue.jpg)
 
+> Update configmap kube-proxy
+```bash
+kubectl -n kube-system edit cm kube-proxy
+```
+tambahkan value `0.0.0.0:10249` pada key `metricsBindAddress`
+```yaml
+    metricsBindAddress: "0.0.0.0:10249"
+```
+
 > Update ip `127.0.0.1` ke ip `0.0.0.0`
 ```bash
 sudo nano /etc/kubernetes/manifests/etcd.yaml
