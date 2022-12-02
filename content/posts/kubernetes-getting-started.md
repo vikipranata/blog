@@ -87,6 +87,16 @@ cat <<EOF | tee ingress-helm-values.yaml
 controller:
   service:
     externalTrafficPolicy: Cluster
+    httpPort:
+      enable: true
+      nodePort: "80"
+      port: 80
+      targetPort: 80
+    httpsPort:
+      enable: true
+      nodePort: "443"
+      port: 443
+      targetPort: 443
 EOF
 ```
 Selanjutnya tinggal diterapkan dengan perintah berikut :
