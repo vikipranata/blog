@@ -160,16 +160,15 @@ sudo nano /etc/kubernetes/manifests/etcd.yaml
     # - --listen-metrics-urls=http://127.0.0.1:2381
 ```
 ```bash
-sudo nano /etc/kubernetes/manifests/kube-controller-manager.yaml
-    # Ubah bagian ini
-    # - --bind-address=127.0.0.1
-```
-```bash
 sudo nano /etc/kubernetes/manifests/kube-scheduler.yaml
     # Ubah bagian ini
     # - --bind-address=127.0.0.1
 ```
-
+```bash
+sudo nano /etc/kubernetes/manifests/kube-controller-manager.yaml
+    # Ubah bagian ini
+    # - --bind-address=127.0.0.1
+```
 ## Sumber Referensi
 Persistent volumes issue:    
 - https://github.com/prometheus-community/helm-charts/issues/186#issuecomment-899669790
