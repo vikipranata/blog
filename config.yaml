@@ -8,15 +8,13 @@ enableRobotsTXT: true
 buildDrafts: false
 buildFuture: false
 buildExpired: false
+enableInlineShortcodes: true
 
 minify:
   disableXML: true
   minifyOutput: true
 
 params:
-  analytics:
-      google:
-          SiteVerificationTag: GTM-K9D72Z9
   env: production
   title: Viki Pranata
   description: "This is my journal"
@@ -26,7 +24,7 @@ params:
   DateFormat: "February 2, 1997"
   defaultTheme: light
   disableThemeToggle: false
-
+  
   ShowReadingTime: true
   ShowShareButtons: true
   ShowPostNavLinks: true
@@ -95,6 +93,12 @@ params:
     threshold: 0.4
     minMatchCharLength: 0
     keys: ["title", "permalink", "summary", "content", "tags"]
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON # is necessary
 
 menu:
   main:
