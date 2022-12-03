@@ -41,6 +41,10 @@ params:
   showtoc: false
   tocopen: false
 
+  analytics:
+      google:
+          SiteVerificationTag: G-J9SDJF0JNV
+
   assets:
     # disableHLJS: true
     # disableFingerprinting: true
