@@ -89,12 +89,12 @@ controller:
     externalTrafficPolicy: Cluster
     httpPort:
       enable: true
-      nodePort: "80"
+      nodePort: ""
       port: 80
       targetPort: 80
     httpsPort:
       enable: true
-      nodePort: "443"
+      nodePort: ""
       port: 443
       targetPort: 443
 EOF
