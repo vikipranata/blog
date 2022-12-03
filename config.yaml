@@ -3,18 +3,20 @@ title: "Viki Pranata"
 paginate: 5
 theme: PaperMod
 
+googleAnalytics: G-DX9576ZP5B
 enableRobotsTXT: true
 buildDrafts: false
 buildFuture: false
 buildExpired: false
-
-googleAnalytics: UA-123-45
 
 minify:
   disableXML: true
   minifyOutput: true
 
 params:
+  analytics:
+      google:
+          SiteVerificationTag: GTM-K9D72Z9
   env: production
   title: Viki Pranata
   description: "This is my journal"
@@ -40,10 +42,6 @@ params:
   hideSummary: false
   showtoc: false
   tocopen: false
-
-  analytics:
-      google:
-          SiteVerificationTag: G-J9SDJF0JNV
 
   assets:
     # disableHLJS: true
