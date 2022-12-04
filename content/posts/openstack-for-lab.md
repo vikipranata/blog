@@ -11,8 +11,8 @@ Untuk kebutuhan lab openstack setidaknya memiliki 1 host untuk controller dan 2 
 | Node Name | Processor | RAM | Root / Volumes | Cinder Volumes | Ip Address |
 | ---- | ---- | ---- | ---- | ---- | ---- |
 | osontroller01 | 8 Core | 8 Gb | 80Gb | | 10.79.0.10 |
-| oscompute01 | 16 Core | 16 Gb | 40Gb | 100Gb | 10.79.0.11 |
-| oscompute02 | 16 Core | 16 Gb | 40Gb | 100Gb | 10.79.0.12 |
+| openstack-compute01 | 16 Core | 16 Gb | 40Gb | 100Gb | 10.79.0.11 |
+| openstack-compute02 | 16 Core | 16 Gb | 40Gb | 100Gb | 10.79.0.12 |
 
 Lalu untuk kebutuhan jaringan openstack dengan rincian sebagai berikut :
 | Name | Network | Virtual IP | Interface |
@@ -20,7 +20,8 @@ Lalu untuk kebutuhan jaringan openstack dengan rincian sebagai berikut :
 | Internal | 10.79.0.0/24 | 10.79.0.254 | ens18 |
 | Provider | 172.16.0.0/24 |  | ens19 |
 
-Semua node menggunakan sistem operasi `Ubuntu 18.04 Bionic` dengan versi `OpenStack Xena`
+Semua node menggunakan sistem operasi `Ubuntu 20.04 Focal` dengan versi `OpenStack Yoga` dengan username setiap node bernama `vq`
+> Sesuaikan dengan environment lab anda
 
 ## Rancangan Topologi
 
@@ -44,24 +45,23 @@ for i in {0..2}; do ssh vq@10.79.0.1$i 'echo $(whoami) $(hostname)'; done
 ```
 
 ### 3. Memberikan full privileges sudo tanpa memasukan password
-> Eksekusi perintah pada oscontroller01 dengan Kolla virtual environment, oscompute01, dan oscompute02
+> Eksekusi perintah pada oscontroller01 dengan Kolla virtual environment, openstack-compute01, dan openstack-compute02
 ```
 echo 'vq ALL=(ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/vq
 ```
 
 ### 4. Menambahkan mapping hosts nama node dan persiapan node
-> Eksekusi perintah pada oscontroller01 dengan Kolla virtual environment, oscompute01, dan oscompute02
+> Eksekusi perintah pada oscontroller01 dengan Kolla virtual environment, openstack-compute01, dan openstack-compute02
 ```bash
 cat <<EOF | sudo tee -a /etc/hosts
-10.79.0.254 vpc-int.syslog.my.id
 10.79.0.10 oscontroller01
-10.79.0.11 oscompute01
-10.79.0.12 oscompute02
+10.79.0.11 openstack-compute01
+10.79.0.12 openstack-compute02
 EOF
 ```
 
 ### 5. Membuat volume group untuk cinder volumes
-> Eksekusi perintah pada oscompute01, dan oscompute02
+> Eksekusi perintah pada openstack-compute01, dan openstack-compute02
 ```bash
 sudo pvcreate /dev/sdb
 sudo vgcreate cinder-volumes /dev/sdb
@@ -85,7 +85,10 @@ source ~/kolla/bin/activate
 
 Update pip dan install dependensi kolla-ansible
 ```bash
-pip install -U pip && pip install ansible==2.10 kolla-ansible==13.0 Jinja2==3.0.0
+pip install -U pip
+pip install 'ansible>=4,<6'
+pip install kolla-ansible
+kolla-ansible install-deps
 ```
 ```bash
 sudo mkdir /etc/kolla
@@ -109,37 +112,31 @@ forks=100
 ### 8. Persiapan Menggunakan Kolla-Ansible
 > Eksekusi perintah pada oscontroller01 dengan Kolla virtual environment
 
-Sesuaikan isi file ~/all-in-one seperti berikut
+Sesuaikan isi file ~/multinode seperti berikut
 ```yaml
-nano ~/all-in-one
+nano ~/multinode
 # These initial groups are the only groups required to be modified. The
 # additional groups are for more control of the environment.
 [control]
-localhost       ansible_connection=local
+openstack-controller       ansible_connection=local
 
 [network]
-localhost       ansible_connection=local
+openstack-controller       ansible_connection=local
 
 [compute]
-# localhost       ansible_connection=local
-oscompute01
-oscompute02
+openstack-compute01
+openstack-compute02
 
 [storage]
-# localhost       ansible_connection=local
-oscompute01
-oscompute02
+openstack-compute01
+openstack-compute02
 
 [monitoring]
-localhost       ansible_connection=local
+openstack-controller       ansible_connection=local
 
 [deployment]
-localhost       ansible_connection=local
-```
-
-Update versi ubuntu dengan perintah berikut :
-```bash
-sed -i 's/focal/bionic/g' ~/kolla/share/kolla-ansible/ansible/roles/prechecks/vars/main.yml
+localhost                   ansible_connection=local
+## Apart from this, there are no changes below!
 ```
 
 Sesuaikan isi file /etc/kolla/globals.yaml seperti berikut
@@ -147,16 +144,16 @@ Sesuaikan isi file /etc/kolla/globals.yaml seperti berikut
 nano /etc/kolla/globals.yaml
 kolla_base_distro: "ubuntu"
 kolla_install_type: "source"
-openstack_release: "xena"
+openstack_release: "yoga"
 kolla_internal_vip_address: "10.79.0.254"
-kolla_internal_fqdn: "vpc-int.syslog.my.id"
 network_interface: "ens18"
 neutron_external_interface: "ens19"
-neutron_plugin_agent: "ovn"
+neutron_plugin_agent: "openvswitch"
 enable_openstack_core: "yes"
 enable_cinder: "yes"
 enable_cinder_backend_lvm: "yes"
 enable_neutron_provider_networks: "yes"
+enable_neutron_trunk: "yes"
 ```
 Verifikasi hasil konfigurasi globals.yaml
 ```bash
@@ -175,17 +172,17 @@ cat /etc/kolla/passwords.yml
 ### 9. Deployment OpenStack
 > Eksekusi perintah pada oscontroller01 dengan Kolla virtual environment
 ```bash
-ansible -i ~/all-in-one all -m ping
+ansible -i ~/multinode all -m ping
     # if no error detect, next step
-kolla-ansible -i ~/all-in-one bootstrap-servers
+kolla-ansible -i ~/multinode bootstrap-servers
     # if no error detect, next step
-kolla-ansible -i ~/all-in-one prechecks
+kolla-ansible -i ~/multinode prechecks
     # if no error detect, next step
-kolla-ansible -i ~/all-in-one pull
+kolla-ansible -i ~/multinode pull
     # if no error detect, next step
-kolla-ansible -i ~/all-in-one deploy
+kolla-ansible -i ~/multinode deploy
     # if no error detect, next step
-kolla-ansible -i ~/all-in-one post-deploy
+kolla-ansible -i ~/multinode post-deploy
 cp -r /etc/kolla/admin-openrc.sh ~/
 ```
 
@@ -211,8 +208,8 @@ openstack compute service list && openstack service list
 +----+----------------+----------------+----------+---------+-------+----------------------------+
 |  1 | nova-scheduler | oscontroller01 | internal | enabled | up    | 2022-11-02T06:11:04.000000 |
 |  1 | nova-conductor | oscontroller01 | internal | enabled | up    | 2022-11-02T06:11:04.000000 |
-|  5 | nova-compute   | oscompute01    | nova     | enabled | up    | 2022-11-02T06:11:11.000000 |
-|  6 | nova-compute   | oscompute02    | nova     | enabled | up    | 2022-11-02T06:11:12.000000 |
+|  5 | nova-compute   | openstack-compute01    | nova     | enabled | up    | 2022-11-02T06:11:11.000000 |
+|  6 | nova-compute   | openstack-compute02    | nova     | enabled | up    | 2022-11-02T06:11:12.000000 |
 +----+----------------+----------------+----------+---------+-------+----------------------------+
 +----------------------------------+-------------+----------------+
 | ID                               | Name        | Type           |
