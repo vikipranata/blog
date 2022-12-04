@@ -74,9 +74,9 @@ params:
       url: "https://www.linkedin.com/in/vikipranata"
 
   cover:
-    hidden: true # hide everywhere but not in structured data
-    hiddenInList: true # hide on list pages and home
-    hiddenInSingle: true # hide on single page
+    hidden: true
+    hiddenInList: true
+    hiddenInSingle: true
 
   editPost:
     URL: "https://github.com/vikipranata/blog/blob/main/content"
