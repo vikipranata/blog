@@ -1,7 +1,7 @@
 ---
 author: "Viki Pranata"
 title: "Cluster OpenStack dengan Kolla-Ansible"
-description : "Membuat cluster OpenStack dengan Kolla-Ansible untuk kebutuhan lab"
+description : "Membuat cluster openstack dengan Kolla-Ansible untuk kebutuhan lab"
 date: "2022-10-31"
 tags: ["linux", "openstack"]
 showToc: true
@@ -10,9 +10,9 @@ showToc: true
 Untuk kebutuhan lab openstack setidaknya memiliki 1 host untuk controller dan 2 host untuk compute baik berupa mesin virtual maupun _baremetal_ untuk spesifikasinya sebagai berikut :
 | Node Name | Processor | RAM | Root / Volumes | Cinder Volumes | Ip Address |
 | ---- | ---- | ---- | ---- | ---- | ---- |
-| osontroller01 | 8 Core | 8 Gb | 80Gb | | 10.79.0.10 |
-| openstack-compute01 | 16 Core | 16 Gb | 40Gb | 100Gb | 10.79.0.11 |
-| openstack-compute02 | 16 Core | 16 Gb | 40Gb | 100Gb | 10.79.0.12 |
+| openstack-controller | 8 Core | 8 GB | 80 GB (sda)| | 10.79.0.10 |
+| openstack-compute01 | 16 Core | 16 GB | 40 GB (sda) | 100 GB (sdb) | 10.79.0.11 |
+| openstack-compute02 | 16 Core | 16 GB | 40 GB (sda) | 100 GB (sdb) | 10.79.0.12 |
 
 Lalu untuk kebutuhan jaringan openstack dengan rincian sebagai berikut :
 | Name | Network | Virtual IP | Interface |
@@ -29,7 +29,7 @@ Semua node menggunakan sistem operasi `Ubuntu 20.04 Focal` dengan versi `OpenSta
 
 ## Persiapan Cluster
 ### 1. Membuat dan mendistribusikan ssh public key
-> Eksekusi perintah pada oscontroller01 dengan Kolla virtual environment
+> Eksekusi perintah pada openstack-controller dengan Kolla virtual environment
 ```bash
 ssh-keygen -t rsa -b 4096 -q -N ""
 
@@ -39,22 +39,22 @@ ssh-copy-id vq@10.79.0.12
 ```
 
 ### 2. Memverifikasi koneksi sesi ssh
-> Eksekusi perintah pada oscontroller01 dengan Kolla virtual environment
+> Eksekusi perintah pada openstack-controller dengan Kolla virtual environment
 ```bash
 for i in {0..2}; do ssh vq@10.79.0.1$i 'echo $(whoami) $(hostname)'; done
 ```
 
 ### 3. Memberikan full privileges sudo tanpa memasukan password
-> Eksekusi perintah pada oscontroller01 dengan Kolla virtual environment, openstack-compute01, dan openstack-compute02
+> Eksekusi perintah pada openstack-controller dengan Kolla virtual environment, openstack-compute01, dan openstack-compute02
 ```
 echo 'vq ALL=(ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/vq
 ```
 
 ### 4. Menambahkan mapping hosts nama node dan persiapan node
-> Eksekusi perintah pada oscontroller01 dengan Kolla virtual environment, openstack-compute01, dan openstack-compute02
+> Eksekusi perintah pada openstack-controller dengan Kolla virtual environment, openstack-compute01, dan openstack-compute02
 ```bash
 cat <<EOF | sudo tee -a /etc/hosts
-10.79.0.10 oscontroller01
+10.79.0.10 openstack-controller
 10.79.0.11 openstack-compute01
 10.79.0.12 openstack-compute02
 EOF
@@ -70,7 +70,7 @@ sudo vgs
 ```
 
 ### 6. Memasang dependensi yang dibutuhkan oleh kolla-ansible
-> Eksekusi perintah pada oscontroller01 dengan Kolla virtual environment
+> Eksekusi perintah pada openstack-controller dengan Kolla virtual environment
 ```bash
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y gcc libffi-dev libssl-dev python3-dev python3-selinux python3-setuptools python3-venv python3-pip net-tools
@@ -100,7 +100,7 @@ cp -r ~/kolla/share/kolla-ansible/ansible/inventory/* ~/
 > **Catatan: untuk selanjutnya harus selalu menjalankan perintah pada virtual environment kolla yang sudah di aktifkan**
 
 ### 7. Konfigurasi Ansible
-> Eksekusi perintah pada oscontroller01 dengan Kolla virtual environment
+> Eksekusi perintah pada openstack-controller dengan Kolla virtual environment
 ```bash
 sudo mkdir /etc/ansible && sudo nano /etc/ansible/ansible.cfg
 [defaults]
@@ -110,7 +110,7 @@ forks=100
 ```
 
 ### 8. Persiapan Menggunakan Kolla-Ansible
-> Eksekusi perintah pada oscontroller01 dengan Kolla virtual environment
+> Eksekusi perintah pada openstack-controller dengan Kolla virtual environment
 
 Sesuaikan isi file ~/multinode seperti berikut
 ```yaml
@@ -170,7 +170,7 @@ cat /etc/kolla/passwords.yml
 ```
 
 ### 9. Deployment OpenStack
-> Eksekusi perintah pada oscontroller01 dengan Kolla virtual environment
+> Eksekusi perintah pada openstack-controller dengan Kolla virtual environment
 ```bash
 ansible -i ~/multinode all -m ping
     # if no error detect, next step
@@ -187,7 +187,7 @@ cp -r /etc/kolla/admin-openrc.sh ~/
 ```
 
 ### 10. Mengkases Cluster OpenStack
-> Eksekusi perintah pada oscontroller01
+> Eksekusi perintah pada openstack-controller
 
 menonaktifkan kolla virtual environment
 ```bash
@@ -206,8 +206,8 @@ openstack compute service list && openstack service list
 +----+----------------+----------------+----------+---------+-------+----------------------------+
 | ID | Binary         | Host           | Zone     | Status  | State | Updated At                 |
 +----+----------------+----------------+----------+---------+-------+----------------------------+
-|  1 | nova-scheduler | oscontroller01 | internal | enabled | up    | 2022-11-02T06:11:04.000000 |
-|  1 | nova-conductor | oscontroller01 | internal | enabled | up    | 2022-11-02T06:11:04.000000 |
+|  1 | nova-scheduler | openstack-controller | internal | enabled | up    | 2022-11-02T06:11:04.000000 |
+|  1 | nova-conductor | openstack-controller | internal | enabled | up    | 2022-11-02T06:11:04.000000 |
 |  5 | nova-compute   | openstack-compute01    | nova     | enabled | up    | 2022-11-02T06:11:11.000000 |
 |  6 | nova-compute   | openstack-compute02    | nova     | enabled | up    | 2022-11-02T06:11:12.000000 |
 +----+----------------+----------------+----------+---------+-------+----------------------------+
