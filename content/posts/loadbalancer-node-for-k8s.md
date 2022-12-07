@@ -2,7 +2,7 @@
 author: "Viki Pranata"
 title: "Load Balancer Ingress Kubernetes"
 description : "Membuat node load balancer untuk ingress kubernetes dengan NGINX"
-date: "23-11-2022"
+date: "2022-11-23"
 tags: ["linux", "Kubernetes", "nginx", "loadbalancer"]
 showToc: true
 ---

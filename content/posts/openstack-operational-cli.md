@@ -2,7 +2,7 @@
 author: "Viki Pranata"
 title: "Mengoperasikan OpenStack Lewat CLI"
 description : "Mengoperasikan OpenStack lewat command line untuk kebutuhan lab"
-date: "31-10-2022"
+date: "2022-10-31"
 tags: ["linux", "openstack"]
 showToc: true
 ---

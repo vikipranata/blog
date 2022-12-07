@@ -2,7 +2,7 @@
 author: "Viki Pranata"
 title: "Cluster Kubernetes for Lab"
 description : "Membuat cluster Kubernetes untuk kebutuhan lab"
-date: "11-11-2022"
+date: "2022-11-15"
 tags: ["linux", "Kubernetes"]
 showToc: true
 ---

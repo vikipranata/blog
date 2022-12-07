@@ -24,7 +24,7 @@ params:
   DateFormat: "February 2, 1997"
   defaultTheme: light
   disableThemeToggle: false
-  
+  TocOpen: true
   ShowReadingTime: true
   ShowShareButtons: true
   ShowPostNavLinks: true
@@ -40,7 +40,7 @@ params:
   hideSummary: false
   showtoc: false
   tocopen: false
-
+  enableEmoji : true
   assets:
     # disableHLJS: true
     # disableFingerprinting: true
@@ -109,11 +109,15 @@ menu:
     - identifier: About
       name: About
       url: https://www.syslog.my.id/about
-      weight: 20
+      weight: 10
+    - identifier: Archives
+      name: Archives
+      url: /archives/
+      weight: 10
     - identifier: Search
       name: Search
       url: /search/
-      weight: 30
+      weight: 10
 
 pygmentsUseClasses: true
 markup:

@@ -2,7 +2,7 @@
 author: "Viki Pranata"
 title: "Cluster High Availability Kubernetes Part 3"
 description : "Membuat cluster HA Kubernetes dengan Kubeadm untuk kebutuhan lab, development, staging maupun production"
-date: "15-11-2022"
+date: "2022-11-15"
 tags: ["linux", "Kubernetes"]
 showToc: true
 ---

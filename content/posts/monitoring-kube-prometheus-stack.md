@@ -2,7 +2,7 @@
 author: "Viki Pranata"
 title: "Kubernetes Monitoring dengan Prometheus Stack"
 description : "Memonitoring Sumberdaya Kubernetes dengan kube-prometheus-stack"
-date: "22-11-2022"
+date: "2022-11-22"
 tags: ["linux", "Kubernetes", "helm", "Prometheus"]
 showToc: true
 ---

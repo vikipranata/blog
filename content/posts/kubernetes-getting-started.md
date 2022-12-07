@@ -2,7 +2,7 @@
 author: "Viki Pranata"
 title: "Hal Yang Bisa Dilakukan Setelah Membangun Kubernetes"
 description : "hal yang bisa kita lakukan setelah membangun Kubernetes"
-date: "22-11-2022"
+date: "2022-11-15"
 tags: ["linux", "Kubernetes", "helm"]
 showToc: true
 ---

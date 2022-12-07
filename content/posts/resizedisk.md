@@ -2,8 +2,9 @@
 author: "Viki Pranata"
 title: "Memperbesar Kapasitas Partisi di Linux"
 description : "Cara Memperbesar Kapasitas Partisi di Linux"
-date: "09-10-2022"
+date: "2022-10-09"
 tags: ["linux", "tools", "storage"]
+categories: ["archives"]
 ---
 
 Masalah utama dalam penggunaan data adalah kapasitas, dalam linux ada beberapa perintah yang memudahkan kita untuk menaikan kapasitas penyimpanan.
