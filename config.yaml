@@ -21,7 +21,6 @@ params:
   keywords: [Blog, Portfolio, PaperMod]
   author: Me
   images: "assets/images/profile.jpg"
-  DateFormat: "February 2, 1997"
   defaultTheme: light
   disableThemeToggle: false
   TocOpen: true
