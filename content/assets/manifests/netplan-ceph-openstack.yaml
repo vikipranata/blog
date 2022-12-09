@@ -2,6 +2,7 @@
 ## os-controller
 network:
   ethernets:
+    #os internal network
     ens18:
       addresses:
       - 10.79.0.10/24
@@ -10,20 +11,20 @@ network:
         addresses:
         - 10.79.0.1
       mtu: 1500
+    #os providers network
     ens19:
       mtu: 1500
-  version: 2
-  vlans:
-    vlan96:
+    #ceph public network
+    ens20:
       addresses:
       - 10.96.0.10/24
-      id: 96
-      link: ens18
-      mtu: 1500
+      mtu: 9000
+  version: 2
 ---
 ## os-compute01
 network:
   ethernets:
+    #os internal network
     ens18:
       addresses:
       - 10.79.0.11/24
@@ -32,26 +33,28 @@ network:
         addresses:
         - 10.79.0.1
       mtu: 1500
+    #os providers network
     ens19:
       mtu: 1500
+    #ceph public network
+    ens20:
+      addresses:
+      - 10.96.0.11/24
+      mtu: 9000
   version: 2
   vlans:
+    #ceph cluster network
     vlan69:
       addresses:
       - 10.69.0.11/24
       id: 69
-      link: ens18
-      mtu: 1500
-    vlan96:
-      addresses:
-      - 10.96.0.11/24
-      id: 96
-      link: ens18
-      mtu: 1500
+      link: ens20
+      mtu: 9000
 ---
 ## os-compute02
 network:
   ethernets:
+    #os internal network
     ens18:
       addresses:
       - 10.79.0.12/24
@@ -60,20 +63,21 @@ network:
         addresses:
         - 10.79.0.1
       mtu: 1500
+    #os providers network
     ens19:
       mtu: 1500
+    #ceph public network
+    ens20:
+      addresses:
+      - 10.96.0.12/24
+      mtu: 9000
   version: 2
   vlans:
+    #ceph cluster network
     vlan69:
       addresses:
       - 10.69.0.12/24
       id: 69
-      link: ens18
-      mtu: 1500
-    vlan96:
-      addresses:
-      - 10.96.0.12/24
-      id: 96
-      link: ens18
-      mtu: 1500
+      link: ens20
+      mtu: 9000
 ---
