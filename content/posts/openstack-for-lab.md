@@ -54,6 +54,7 @@ echo 'vq ALL=(ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/vq
 > Eksekusi perintah pada openstack-controller dengan Kolla virtual environment, openstack-compute01, dan openstack-compute02
 ```bash
 cat <<EOF | sudo tee -a /etc/hosts
+10.79.0.254 vpc.syslog.my.id
 10.79.0.10 openstack-controller
 10.79.0.11 openstack-compute01
 10.79.0.12 openstack-compute02
@@ -113,8 +114,8 @@ forks=100
 > Eksekusi perintah pada openstack-controller dengan Kolla virtual environment
 
 Sesuaikan isi file ~/multinode seperti berikut
+
 ```yaml
-nano ~/multinode
 # These initial groups are the only groups required to be modified. The
 # additional groups are for more control of the environment.
 [control]
@@ -135,7 +136,7 @@ openstack-compute02
 openstack-controller       ansible_connection=local
 
 [deployment]
-localhost                   ansible_connection=local
+localhost                  ansible_connection=local
 ## Apart from this, there are no changes below!
 ```
 
@@ -146,6 +147,7 @@ kolla_base_distro: "ubuntu"
 kolla_install_type: "source"
 openstack_release: "yoga"
 kolla_internal_vip_address: "10.79.0.254"
+kolla_internal_fqdn: "vpc.syslog.my.id"
 network_interface: "ens18"
 neutron_external_interface: "ens19"
 neutron_plugin_agent: "openvswitch"
