@@ -1,0 +1,79 @@
+---
+## os-controller
+network:
+  ethernets:
+    ens18:
+      addresses:
+      - 10.79.0.10/24
+      gateway4: 10.79.0.1
+      nameservers:
+        addresses:
+        - 10.79.0.1
+      mtu: 1500
+    ens19:
+      mtu: 1500
+  version: 2
+  vlans:
+    vlan96:
+      addresses:
+      - 10.96.0.10/24
+      id: 96
+      link: ens18
+      mtu: 1500
+---
+## os-compute01
+network:
+  ethernets:
+    ens18:
+      addresses:
+      - 10.79.0.11/24
+      gateway4: 10.79.0.1
+      nameservers:
+        addresses:
+        - 10.79.0.1
+      mtu: 1500
+    ens19:
+      mtu: 1500
+  version: 2
+  vlans:
+    vlan69:
+      addresses:
+      - 10.69.0.11/24
+      id: 69
+      link: ens18
+      mtu: 1500
+    vlan96:
+      addresses:
+      - 10.96.0.11/24
+      id: 96
+      link: ens18
+      mtu: 1500
+---
+## os-compute02
+network:
+  ethernets:
+    ens18:
+      addresses:
+      - 10.79.0.12/24
+      gateway4: 10.79.0.1
+      nameservers:
+        addresses:
+        - 10.79.0.1
+      mtu: 1500
+    ens19:
+      mtu: 1500
+  version: 2
+  vlans:
+    vlan69:
+      addresses:
+      - 10.69.0.12/24
+      id: 69
+      link: ens18
+      mtu: 1500
+    vlan96:
+      addresses:
+      - 10.96.0.12/24
+      id: 96
+      link: ens18
+      mtu: 1500
+---
