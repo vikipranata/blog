@@ -17,20 +17,20 @@ Setelah menaikan kapasitas penyimpanan dari sisi host mesin virtual server, ting
 
 ### Partisi Tanpa LVM
 Meningkatkan kapasitas partisi _root_ dengan perintah    
-`growpart /dev/sda 1`
+`growpart /dev/xxx 1`
 
 Lalu gunakan perintah berikut untuk mengisi semua ruang partisi _root_    
-`resize2fs /dev/sda1`
+`resize2fs /dev/xxx1`
 
 ### Partisi dengan LVM
 Meningkatkan kapasitas partisi lvm dengan perintah    
-`pvresize /dev/sda1`
+`pvresize /dev/xxx1`
 
 Lalu gunakan perintah berikut untuk mengisi semua ruang partisi lvm yang tersedia    
-`lvresize --extents +100%FREE --resizefs /dev/xxxx/root`
+`lvresize --extents +100%FREE --resizefs /dev/xxx/root`
 
 Jika ingin menggunakan hanya 20GB saja bisa menggunakan perintah berikut    
-`lvresize --size +20G --resizefs /dev/xxxx/root`    
+`lvresize --size +20G --resizefs /dev/xxx/root`    
 
 ### Verifikasi
 Lalu verifikasi penyimpanan apakah sudah sesuai atau belum    
@@ -38,3 +38,8 @@ Lalu verifikasi penyimpanan apakah sudah sesuai atau belum
 > Catatan :    
 jika _no space left on the block device_, bisa menggunakan perintah berikut:    
 `mount -o size=10M,rw,nodev,nosuid -t tmpfs tmpfs /tmp`
+
+### Memformat disk
+```bash
+wipefs -af /dev/xxx
+```
