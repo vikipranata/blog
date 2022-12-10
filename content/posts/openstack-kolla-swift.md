@@ -17,7 +17,8 @@ openstack swift membutuhkan block storage untuk media penyimpanan.Tambahkan 1 ha
 | openstack-compute01 | 10.79.0.11 | 10GB | /dev/vda |
 | openstack-compute02 | 10.79.0.12 | 10GB | /dev/vda |
 
-> jalankan pada setiap compute node
+
+> jalankan pada setiap semua node
 ```bash
 # <WARNING ALL DATA ON DISK will be LOST!>
 index=0
