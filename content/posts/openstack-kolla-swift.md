@@ -10,20 +10,19 @@ showToc: true
 Menambahkan layanan swift object storage pada openstack yang dideploy dengan kolla ansible pada postingan [openstack for lab](/posts/openstack-for-lab)
 
 ## Persiapan
-### Compute Node
 openstack swift membutuhkan block storage untuk media penyimpanan.Tambahkan 1 hardisk pada tiap node untuk di khususkan sebagai storage swift.
-| Node Name | Swift Volume | Ip Address |
-| ---- | ---- | ---- |
-| openstack-controller | | 10.79.0.10 |
-| openstack-compute01 | 20GB | 10.79.0.11 |
-| openstack-compute02 | 20GB | 10.79.0.12 |
+| Node Name | Ip Address | Swift Volume | Disk |
+| ---- | ---- | ---- | ---- |
+| openstack-controller | 10.79.0.10 | 10GB | /dev/vda |
+| openstack-compute01 | 10.79.0.11 | 10GB | /dev/vda |
+| openstack-compute02 | 10.79.0.12 | 10GB | /dev/vda |
 
 > jalankan pada setiap compute node
 ```bash
 # <WARNING ALL DATA ON DISK will be LOST!>
 index=0
-for disk in sdd; do
-    parted /dev/${disk} -s -- mklabel gpt mkpart KOLLA_SWIFT_DATA 1 -1
+for disk in vda; do
+    sudo parted /dev/${disk} -s -- mklabel gpt mkpart KOLLA_SWIFT_DATA 1 -1
     sudo mkfs.xfs -f -L d${index} /dev/${disk}1
     (( index++ ))
 done
@@ -34,12 +33,11 @@ Verifikasi block storage yang sudah di format
 lsblk -f
 ```
 
-### Controller Node
 Sebelum menjalankan layanan openstack swift, kita perlu membuat _Object Ring, Account ring, dan Container Ring_ yang berfungsi untuk memberi tahu berbagai layanan Swift di mana data berada di kluster.
 ```bash
-cat <<EOF | tee ~/swift-rings.sh
+nano ~/swift-rings.sh
 #!/usr/bin/bash
-STORAGE_NODES=(10.79.0.11 10.79.0.12)
+STORAGE_NODES=(10.79.0.10 10.79.0.11 10.79.0.12)
 KOLLA_SWIFT_BASE_IMAGE="kolla/oraclelinux-source-swift-base:4.0.0"
 
 mkdir -p /etc/kolla/config/swift
@@ -109,7 +107,6 @@ for ring in object account container; do
     swift-ring-builder \
       /etc/kolla/config/swift/${ring}.builder rebalance;
 done
-EOF
 ```
 
 tambahkan permission exec pada file ~/swift-rings.sh dan jalankan dengan user sudo
@@ -130,6 +127,7 @@ enable_swift: "yes"
 enable_swift_s3api: "yes"
 glance_backend_file: "yes"
 glance_backend_swift: "no"
+swift_devices_name: "KOLLA_SWIFT_DATA"
 ```
 
 Selanjutnya deploy layanan swift dengan perintah:
