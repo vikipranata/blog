@@ -2,7 +2,7 @@
 author: "Viki Pranata"
 title: "OpenStack Swift via Kolla Ansible"
 description : "Menambahkan layanan swift object storage pada openstack kolla ansible"
-date: "2022-12-7"
+date: "2022-12-07"
 tags: ["linux", "openstack", "storage", "cloud"]
 showToc: true
 ---
