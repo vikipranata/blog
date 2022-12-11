@@ -2,82 +2,79 @@
 ## os-controller
 network:
   ethernets:
-    #os internal network
-    ens18:
+    ens18: #provider network
+      mtu: 1500
+    ens19: #internal network
       addresses:
       - 10.79.0.10/24
       gateway4: 10.79.0.1
       nameservers:
         addresses:
         - 10.79.0.1
-      mtu: 1500
-    #os providers network
-    ens19:
-      mtu: 1500
-    #ceph public network
-    ens20:
+    ens20: #ceph public network
       addresses:
-      - 10.96.0.10/24
-      mtu: 9000
+      - 10.10.0.10/24
   version: 2
+  vlans:
+    vlan10:
+      addresses:
+      - 10.79.10.10/24
+      id: 10
+      link: ens19
 ---
 ## os-compute01
 network:
   ethernets:
-    #os internal network
-    ens18:
+    ens18: #provider network
+      mtu: 1500
+    ens19: #internal network
       addresses:
       - 10.79.0.11/24
       gateway4: 10.79.0.1
       nameservers:
         addresses:
         - 10.79.0.1
-      mtu: 1500
-    #os providers network
-    ens19:
-      mtu: 1500
-    #ceph public network
-    ens20:
+    ens20: #ceph public network
       addresses:
-      - 10.96.0.11/24
-      mtu: 9000
+      - 10.10.0.11/24
   version: 2
   vlans:
-    #ceph cluster network
-    vlan69:
+    vlan10: #selfservice network
       addresses:
-      - 10.69.0.11/24
-      id: 69
+      - 10.79.10.11/24
+      id: 10
+      link: ens19
+    vlan20: #ceph cluster network
+      addresses:
+      - 10.20.0.11/24
+      id: 20
       link: ens20
-      mtu: 9000
 ---
 ## os-compute02
 network:
   ethernets:
-    #os internal network
-    ens18:
+    ens18: #provider network
+      mtu: 1500
+    ens19: #internal network
       addresses:
       - 10.79.0.12/24
       gateway4: 10.79.0.1
       nameservers:
         addresses:
         - 10.79.0.1
-      mtu: 1500
-    #os providers network
-    ens19:
-      mtu: 1500
-    #ceph public network
-    ens20:
+    ens20: #ceph public network
       addresses:
-      - 10.96.0.12/24
-      mtu: 9000
+      - 10.10.0.12/24
   version: 2
   vlans:
-    #ceph cluster network
-    vlan69:
+    vlan10: #selfservice network
       addresses:
-      - 10.69.0.12/24
-      id: 69
+      - 10.79.10.11/24
+      id: 10
+      link: ens19
+    vlan20: #ceph cluster network
+      addresses:
+      - 10.20.0.12/24
+      id: 20
       link: ens20
-      mtu: 9000
 ---
