@@ -3,7 +3,7 @@ author: "Viki Pranata"
 title: "Metal as a Services (MaaS) for Lab"
 description : "Membuat MaaS untuk provisioner kebutuhan lab"
 date: "2022-12-08"
-tags: ["linux", "MaaS"]
+tags: ["linux", "MaaS", "cloud"]
 showToc: true
 ---
 

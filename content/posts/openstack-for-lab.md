@@ -3,7 +3,7 @@ author: "Viki Pranata"
 title: "Cluster OpenStack dengan Kolla-Ansible"
 description : "Membuat cluster openstack dengan Kolla-Ansible untuk kebutuhan lab"
 date: "2022-10-31"
-tags: ["linux", "openstack"]
+tags: ["linux", "openstack", "cloud"]
 showToc: true
 ---
 

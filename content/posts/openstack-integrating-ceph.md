@@ -2,8 +2,8 @@
 author: "Viki Pranata"
 title: "Cluster OpenStack dengan Ceph Storage"
 description : "Membuat cluster openstack dengan Kolla-Ansible serta mengintegrasikan dengan ceph storage untuk kebutuhan lab"
-date: "2022-12-09"
-tags: ["linux", "openstack"]
+date: "2022-12-11"
+tags: ["linux", "openstack", "ceph", "storage", "cloud"]
 showToc: true
 ---
 ## Persiapan Lab
