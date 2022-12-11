@@ -13,16 +13,16 @@ Menambahkan layanan swift object storage pada openstack yang dideploy dengan kol
 openstack swift membutuhkan block storage untuk media penyimpanan.Tambahkan 1 hardisk pada tiap node untuk di khususkan sebagai storage swift.
 | Node Name | Ip Address | Swift Volume | Disk |
 | ---- | ---- | ---- | ---- |
-| openstack-controller | 10.79.0.10 | 10GB | /dev/vda |
-| openstack-compute01 | 10.79.0.11 | 10GB | /dev/vda |
-| openstack-compute02 | 10.79.0.12 | 10GB | /dev/vda |
+| openstack-controller | 10.79.0.10 | 10GB | /dev/sdb |
+| openstack-compute01 | 10.79.0.11 | 10GB | /dev/sdb |
+| openstack-compute02 | 10.79.0.12 | 10GB | /dev/sdb |
 
 
 > jalankan pada semua node
 ```bash
 # <WARNING ALL DATA ON DISK will be LOST!>
 index=0
-for disk in vda; do
+for disk in sdb; do
     sudo parted /dev/${disk} -s -- mklabel gpt mkpart KOLLA_SWIFT_DATA 1 -1
     sudo mkfs.xfs -f -L d${index} /dev/${disk}1
     (( index++ ))
@@ -39,7 +39,7 @@ Sebelum menjalankan layanan openstack swift, kita perlu membuat _Object Ring, Ac
 nano ~/swift-rings.sh
 #!/usr/bin/bash
 STORAGE_NODES=(10.79.0.10 10.79.0.11 10.79.0.12)
-KOLLA_SWIFT_BASE_IMAGE="kolla/oraclelinux-source-swift-base:4.0.0"
+KOLLA_SWIFT_BASE_IMAGE="kolla/centos-source-swift-base:4.0.0"
 
 mkdir -p /etc/kolla/config/swift
 
@@ -149,4 +149,4 @@ openstack service list --long
 
 
 ## Sumber Referensi
-- https://docs.openstack.org/kolla-ansible/pike/reference/swift-guide.html
+- https://docs.openstack.org/kolla-ansible/yoga/reference/storage/swift-guide.html
