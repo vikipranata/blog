@@ -141,12 +141,44 @@ Setelah selesai semua `deactivate` kolla python virtual environment lalu install
 sudo apt instll -y python3-swiftclient
 ```
 
-Verifikasi hasil pemasangan layanan openstack swift dengan perintah
-```bash
-openstack service list --long
-```
-![image](/assets/images/openstack-service-swift.jpg)
+Verifikasi hasil pemasangan layanan openstack swift
+> Membuat bucket
 
+```bash
+openstack container create swiftbucket
++---------------------------------------+-------------+------------------------------------+
+| account                               | container   | x-trans-id                         |
++---------------------------------------+-------------+------------------------------------+
+| AUTH_0f7a4e704061426881f33429923f99a9 | swiftbucket | txb4b14cf2042646d5b9e1a-0063953f60 |
++---------------------------------------+-------------+------------------------------------+
+```
+
+> Mengupload file object ke bucket
+
+```bash
+openstack object create swiftbucket ansible.log 
++-------------+-------------+----------------------------------+
+| object      | container   | etag                             |
++-------------+-------------+----------------------------------+
+| ansible.log | swiftbucket | a462184e9f31307bee7d91a48ad46d54 |
++-------------+-------------+----------------------------------+
+```
+
+> Mendeskripsikan bucket
+
+```bash
+openstack container show swiftbucket          
++----------------+---------------------------------------+
+| Field          | Value                                 |
++----------------+---------------------------------------+
+| account        | AUTH_0f7a4e704061426881f33429923f99a9 |
+| bytes_used     | 1012373                               |
+| container      | swiftbucket                           |
+| object_count   | 1                                     |
+| storage_policy | Policy-0                              |
++----------------+---------------------------------------+
+```
 
 ## Sumber Referensi
 - https://docs.openstack.org/kolla-ansible/yoga/reference/storage/swift-guide.html
+- https://docs.openstack.org/swift/latest/development_saio.html
