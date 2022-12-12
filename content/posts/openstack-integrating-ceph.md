@@ -176,11 +176,11 @@ sudo rbd pool init vms
 Lalu buat authentikasi untuk cinder-backup, cinder, glance, dan nova pada masing-masing pool yang sudah dibuat
 ```bash
 sudo ceph auth get-or-create client.cinder-backup \
-mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=volumes' \
+mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=backups, allow rwx pool=images' \
 -o /etc/ceph/ceph.client.cinder-backup.keyring
 
 sudo ceph auth get-or-create client.cinder \
-mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=backups, allow rwx pool=images' \
+mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=volumes' \
 -o /etc/ceph/ceph.client.cinder.keyring
 
 sudo ceph auth get-or-create client.glance \
