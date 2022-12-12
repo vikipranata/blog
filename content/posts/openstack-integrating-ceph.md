@@ -173,14 +173,10 @@ sudo rbd pool init images
 sudo rbd pool init vms
 ```
 
-Lalu buat authentikasi untuk cinder-backup, cinder, glance, dan nova pada masing-masing pool yang sudah dibuat
+Lalu buat authentikasi untuk cinder, cinder, glance, dan nova pada masing-masing pool yang sudah dibuat
 ```bash
-sudo ceph auth get-or-create client.cinder-backup \
-mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=backups, allow rwx pool=images' \
--o /etc/ceph/ceph.client.cinder-backup.keyring
-
 sudo ceph auth get-or-create client.cinder \
-mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=volumes' \
+mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=volumes, allow rwx pool=backups, allow rwx pool=images' \
 -o /etc/ceph/ceph.client.cinder.keyring
 
 sudo ceph auth get-or-create client.glance \
@@ -201,18 +197,6 @@ cat <<EOF | sudo tee -a /etc/ceph/ceph.conf
 auth_cluster_required = cephx
 auth_service_required = cephx
 auth_client_required = cephx
-
-[client.cinder-backup]
-rbd default data pool = volumes
-
-[client.cinder]
-rbd default data pool = backups
-
-[client.glance]
-rbd default data pool = images
-
-[client.nova]
-rbd default data pool = vms
 EOF
 ```
 
@@ -222,7 +206,6 @@ tree /etc/kolla/config
 ├── cinder
 │   ├── ceph.conf
 │   ├── cinder-backup
-│   │   ├── ceph.client.cinder-backup.keyring
 │   │   └── ceph.client.cinder.keyring
 │   └── cinder-volume
 │       └── ceph.client.cinder.keyring
@@ -243,17 +226,14 @@ ssh 10.79.0.$i sudo mkdir -p /etc/kolla/config/cinder/cinder-volume
 ssh 10.79.0.$i sudo mkdir -p /etc/kolla/config/glance
 ssh 10.79.0.$i sudo mkdir -p /etc/kolla/config/nova
 
-cat /etc/ceph/ceph.conf | ssh 10.79.0.$i sudo tee -a /etc/ceph/ceph.conf
 cat /etc/ceph/ceph.conf | ssh 10.79.0.$i sudo tee /etc/kolla/config/cinder/ceph.conf
 cat /etc/ceph/ceph.conf | ssh 10.79.0.$i sudo tee /etc/kolla/config/glance/ceph.conf
 cat /etc/ceph/ceph.conf | ssh 10.79.0.$i sudo tee /etc/kolla/config/nova/ceph.conf
 
-sudo ceph auth get-or-create client.cinder-backup | ssh 10.79.0.$i sudo tee /etc/kolla/config/cinder/cinder-backup/ceph.client.cinder-backup.keyring
 sudo ceph auth get-or-create client.cinder | ssh 10.79.0.$i sudo tee /etc/kolla/config/cinder/cinder-backup/ceph.client.cinder.keyring
 sudo ceph auth get-or-create client.cinder | ssh 10.79.0.$i sudo tee /etc/kolla/config/cinder/cinder-volume/ceph.client.cinder.keyring
-sudo ceph auth get-or-create client.cinder | ssh 10.79.0.$i sudo tee /etc/kolla/config/nova/ceph.client.cinder.keyring
-
 sudo ceph auth get-or-create client.glance | ssh 10.79.0.$i sudo tee /etc/kolla/config/glance/ceph.client.glance.keyring
+sudo ceph auth get-or-create client.cinder | ssh 10.79.0.$i sudo tee /etc/kolla/config/nova/ceph.client.cinder.keyring
 sudo ceph auth get-or-create client.nova | ssh 10.79.0.$i sudo tee /etc/kolla/config/nova/ceph.client.nova.keyring
 done
 ```
@@ -334,8 +314,8 @@ ceph_glance_pool_name: "images"
 ceph_cinder_keyring: "ceph.client.cinder.keyring"
 ceph_cinder_user: "cinder"
 ceph_cinder_pool_name: "volumes"
-ceph_cinder_backup_keyring: "ceph.client.cinder-backup.keyring"
-ceph_cinder_backup_user: "cinder-backup"
+ceph_cinder_backup_keyring: "ceph.client.cinder.keyring"
+ceph_cinder_backup_user: "cinder"
 ceph_cinder_backup_pool_name: "backups"
 ceph_nova_keyring: "ceph.client.nova.keyring"
 ceph_nova_user: "nova"
