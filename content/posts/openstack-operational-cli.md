@@ -33,7 +33,7 @@ openstack user set viki --project kubernetes
 
 ```bash
 # Verification
-for i in {viki, kubernetes}; do openstack user show $i; done
+for i in {viki,k8s}; do openstack user show $i; done
 ```
 
 ```bash
@@ -44,7 +44,7 @@ openstack role add --user k8s --project kubernetes admin
 
 ```bash
 # Verification
-for i in {viki, kubernetes}; do openstack role assignment list --user $i --names; done
+for i in {viki,k8s}; do openstack role assignment list --user $i --names; done
 ```
 
 Referensi <cite>[^1][^2][^3]</cite>

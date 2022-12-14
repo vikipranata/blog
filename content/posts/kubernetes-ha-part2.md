@@ -83,6 +83,7 @@ backend k8s-apiserver
         server k8s-master03 192.168.0.13:6443 check
 EOF
 ```
+Lakukan penguijan konfigurasi dengan perintah `sudo haproxy -f /etc/haproxy/haproxy.cfg -c` jika tidak ada pesan error bisa langsung diterapkan konfiruasi yang baru dengan perintah berikut :
 
 ```bash
 sudo systemctl restart haproxy

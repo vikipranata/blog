@@ -23,7 +23,7 @@ sudo mv /etc/nginx/{nginx.conf,nginx.conf.orig}
 ```
 ### Pasang konfigurasi baru
 ```
-cat <<EOF | sudo tee /etc/nginx/nginx.conf
+sudo nano /etc/nginx/nginx.conf
 user www-data;
 worker_processes auto;
 pid /run/nginx.pid;
@@ -50,7 +50,6 @@ stream {
     access_log /var/log/nginx/access.log basic;
     error_log  /var/log/nginx/error.log;
 }
-EOF
 ```
 Buat direktori `stream.d` 
 ```bash
@@ -60,8 +59,8 @@ Buat konfigurasi http load balancer, pastikan terlebih dahulu port yang terekspo
 ```bash
 cat <<EOF | sudo tee /etc/nginx/stream.d/k8s-ingress-http.conf
 upstream k8s-ingress-http {
-    server 192.168.0.102:<port service http> max_fails=3;
-    server 192.168.0.103:<port service http> max_fails=3;
+    server 192.168.0.102:38080 max_fails=3;
+    server 192.168.0.103:38080 max_fails=3;
 }
 
 server {
@@ -84,8 +83,8 @@ Buat konfigurasi http load balancer, pastikan terlebih dahulu port yang terekspo
 ```bash
 cat <<EOF | sudo tee /etc/nginx/stream.d/k8s-ingress-https.conf
 upstream k8s-ingress-https {
-    server 192.168.0.102:<port service https> max_fails=3;
-    server 192.168.0.103:<port service https> max_fails=3;
+    server 192.168.0.102:38443 max_fails=3;
+    server 192.168.0.103:38443 max_fails=3;
 }
 
 server {
@@ -96,20 +95,10 @@ server {
 
     ssl_certificat      /etc/letsencrypt/live/syslog.my.id/cert.pem;
     ssl_certificate_key /etc/letsencrypt/live/syslog.my.id/privkey.pem;
-    ssl_session_timeout 1d;
-    ssl_session_cache   shared:MozSSL:10m;
-    ssl_session_tickets off;
 
     # intermediate configuration
     ssl_dhparam         /etc/letsencrypt/ssl-dhparams.pem;
     include             /etc/letsencrypt/options-ssl-nginx.conf;
-
-    # HSTS (ngx_http_headers_module is required) (63072000 seconds)
-    add_header Strict-Transport-Security "max-age=63072000" always;
-
-    # OCSP stapling
-    ssl_stapling on;
-    ssl_stapling_verify on;
 }
 EOF
 ```
